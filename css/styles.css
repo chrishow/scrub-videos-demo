@@ -1,0 +1,65 @@
+:root {
+    --side-margin: 5rem;
+}
+
+@media screen and (max-width: 600px) {
+    :root {
+        --side-margin: 2rem;
+    }
+}
+
+
+body {
+    font-family: Inter, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+body {
+    margin: 0;
+}
+
+h2,
+p {
+    margin-left: var(--side-margin);
+    margin-right: var(--side-margin);
+}
+
+h2 {
+    margin-block: 1em 0;
+}
+
+.scrub-video-container {
+    margin-left: 5rem;
+    margin-right: 5rem;
+    position: sticky;
+    top: 0px;
+    height: 100vh;
+    transition: all 0.2s;
+}
+
+.scrub-video-container.in-view {
+    margin: 0;
+}
+
+.scrub-video-container.in-view video {
+    top: 0;
+    height: 100%;
+}
+
+.scrub-video-wrapper {
+    height: 600vh;
+}
+
+video {
+    position: absolute;
+    top: 3em;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 6em);
+    object-fit: cover;
+    transition: all 0.2s;
+    opacity: 0;
+}
+
+video.loaded {
+    opacity: 1;
+}
