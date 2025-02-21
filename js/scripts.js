@@ -1,7 +1,52 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+    // This is just for the demo, not needed in production
+    (() => {
+
+        function formatBytes(bytes, decimals) {
+            if (bytes == 0) return '0 Bytes';
+            var k = 1024,
+                dm = decimals || 2,
+                sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+                i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        const fileSizeObserver = new MutationObserver((mutationList) => {
+            mutationList.forEach((mutation) => {
+                switch (mutation.type) {
+                    case "attributes":
+                        switch (mutation.attributeName) {
+                            case "contentlength":
+                                console.log(mutation.target.getAttribute("contentLength"));
+                                // Update file size
+                                mutation.target.parentElement.parentElement.previousElementSibling.querySelector("span.size").textContent = formatBytes(mutation.target.getAttribute("contentLength"));
+                                break;
+                            default:
+                                console.log(mutation);
+                                break;
+                        }
+                        break;
+                }
+            });
+        });
+
+        document.querySelectorAll("video").forEach((video) => {
+            fileSizeObserver.observe(video, {
+                attributes: true,
+                attributeFilter: ["contentlength"],
+            });
+        });
+
+
+    })();
+
+
     new ScrubVideoManager();
-}
-);
+});
+
+
+
 
 function ScrubVideoManager() {
     let that = this;
@@ -25,7 +70,10 @@ function ScrubVideoManager() {
         const video = wrapper.querySelector('video');
         const src = video.getAttribute('src');
         fetch(src)
-            .then((response) => response.blob())
+            .then((response) => {
+                video.setAttribute("contentlength", response.headers.get("content-length"));
+                return response.blob()
+            })
             .then((response) => {
                 let blobURL = URL.createObjectURL(response);
                 video.setAttribute("src", blobURL);

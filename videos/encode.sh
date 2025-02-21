@@ -61,7 +61,40 @@ KEYFRAME_INTERVAL=1
   -pix_fmt yuv420p    \
   -an                 \
   -preset 'slow'      \
-  output.mp4
+  output-crf20-g2.mp4
+
+  ffmpeg -y -i Autograph.mp4   \
+  -vf scale=1920:-1   \
+  -movflags faststart \
+  -vcodec libx264     \
+  -crf 20             \
+  -g 5                \
+  -pix_fmt yuv420p    \
+  -an                 \
+  -preset 'slow'      \
+  output-crf20-g5.mp4
+
+  ffmpeg -y -i Autograph.mp4   \
+  -vf scale=1920:-1   \
+  -movflags faststart \
+  -vcodec libx264     \
+  -crf 25             \
+  -g 5                \
+  -pix_fmt yuv420p    \
+  -an                 \
+  -preset 'slow'      \
+  output-crf25-g5.mp4
+
+ffmpeg -y -i Autograph.mp4   \
+  -vf scale=1920:-1   \
+  -movflags faststart \
+  -vcodec libx264     \
+  -crf 30             \
+  -g 5                \
+  -pix_fmt yuv420p    \
+  -an                 \
+  -preset 'slow'      \
+  output-crf30-g5.mp4
 
 
 
