@@ -90,11 +90,11 @@ KEYFRAME_INTERVAL=1
   -movflags faststart \
   -vcodec libx264     \
   -crf 30             \
-  -g 5                \
+  -g 1                \
   -pix_fmt yuv420p    \
   -an                 \
   -preset 'slow'      \
-  output-crf30-g5.mp4
+  output-crf30-g1.mp4
 
   ffmpeg -y -i Autograph.mp4   \
   -vf scale=1920:-1   \
@@ -143,3 +143,45 @@ ffmpeg -y -i Autograph.mp4   \
 #     -crf 18  \
 #     -g 1 \
 #     output.mp4
+
+
+
+#!/bin/bash
+
+
+ffmpeg -y \
+-i Burlington.mov \
+-vf scale=1920:-1 \
+-crf 25 \
+-g 2 \
+-movflags faststart \
+-vcodec libx264 \
+-pix_fmt yuv420p \
+-an \
+-preset 'slow' \
+burlington-crf-25-g2.mp4
+
+ffmpeg -y -ss 00:00:00 -to 00:00:06 -i burlington-crf-25-g2.mp4 -c copy burlington-crf-25-g2-trimmed.mp4
+
+ffprobe -v error -select_streams v:0 -count_frames \
+    -show_entries stream=nb_read_frames -of csv=p=0 burlington-crf-25-g2-trimmed.mp4
+
+
+ffmpeg -y \
+-i Autograph.mov \
+-vf scale=1920:-1 \
+-crf 25 \
+-g 2 \
+-movflags faststart \
+-vcodec libx264 \
+-pix_fmt yuv420p \
+-an \
+-preset 'slow' \
+autograph-crf-25-g2.mp4
+
+
+ffmpeg -y -ss 00:00:06 -to 00:00:11 -i autograph-crf-25-g2.mp4 -c copy autograph-crf-25-g2-trimmed.mp4
+
+
+ffprobe -v error -select_streams v:0 -count_frames \
+    -show_entries stream=nb_read_frames -of csv=p=0 autograph-crf-25-g2-trimmed.mp4

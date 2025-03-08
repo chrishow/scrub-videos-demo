@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="./css/styles.css">
+
+        <style>
+            video {
+                position: relative;
+                width: 100%;
+                height: auto;
+                opacity: 1;
+            }
+
+            canvas {
+                width: 100%;
+                height: auto;
+                opacity: 1;
+                margin-top: 1em;
+            }
+        </style>
+        <script type="module">
+            import getVideoFrames from "https://deno.land/x/get_video_frames@v0.0.9/mod.js"
+            
+            let frameCount = 0;
+
+            window.start = async function(file) {
+                let ctx = canvasEl.getContext("2d"); 
+
+                // `getVideoFrames` requires a video URL as input.
+                // If you have a file/blob instead of a videoUrl, turn it into a URL like this:
+                let videoUrl = './videos/Autograph.mp4';
+
+                await getVideoFrames({
+                    videoUrl,
+                    onFrame(frame) {  // `frame` is a VideoFrame object: https://developer.mozilla.org/en-US/docs/Web/API/VideoFrame
+                        ctx.drawImage(frame, 0, 0, canvasEl.width, canvasEl.height);
+                        frame.close();
+                        frameCount++;
+                    },
+                    onConfig(config) {
+                        canvasEl.width = config.codedWidth;
+                        canvasEl.height = config.codedHeight;
+                    },
+                    onFinish() {
+                        console.log("finished!");
+                        console.log("frameCount", frameCount);
+                    },
+                });
+
+                URL.revokeObjectURL(file); // revoke URL to prevent memory leak
+            }
+        </script>
+    </head>
+    <body>
+        <h2>
+            Frame grab from video
+          </h2>
+
+          <canvas id="canvasEl"></canvas>
+            <button onclick="start()">Start</button>
+    </body>
+</html>

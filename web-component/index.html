@@ -1,0 +1,190 @@
+<html>
+    <head>
+        <script type="module" src="scrub-video-component.js"></script>
+
+        <style> 
+            /*
+             * scrub-video web component styles 
+             */
+             scrub-video {
+                /* Setting these help to avoid layout shifts */
+                display: block;
+                min-height: calc(100vh);
+
+
+                /* 
+                 * Settings from here the defaults, you don't actually need to 
+                 * set these unless you want to change the defaults
+                 */
+
+                /* Margins when the video is not zoomed 
+                 * You probably want these to match your site content's margins
+                 */
+                --initial-margin-left: 5rem;
+                --initial-margin-right: 5rem;
+                --initial-margin-top: 3rem;
+                --initial-margin-bottom: 3rem;
+
+                /* How many 'pages' you have to scroll through to
+                 * scrub through the video 
+                 */
+                --scrub-pages: 3;
+
+                /* How quickly the video fades in once loaded */
+                --load-fade-duration: 0.2s;
+
+                /* How quickly the video zooms as it goes full screen */
+                --zoom-duration: 0.2s;
+            }
+
+
+            /* The rest of these styles are just for this demo */
+            :root {
+                --side-margin: 5rem;
+            }
+
+            @media screen and (max-width: 600px) {
+                :root {
+                    --side-margin: 2rem;
+                }
+            }
+
+
+            body {
+                font-family: Inter, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            }
+
+            body {
+                margin: 0;
+            }
+
+            h2,
+            p {
+                margin-left: var(--side-margin);
+                margin-right: var(--side-margin);
+            }
+
+            h2 {
+                margin-block: 1em 0;
+            }
+
+        </style>
+        
+    </head>
+    <body>
+        <h2>
+            Keep scrolling down...
+          </h2>
+          
+          <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </p>
+          
+          <p>
+            Proin facilisis velit arcu, nec dictum mauris sagittis fringilla. Suspendisse potenti.
+          </p>
+          
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+          
+          <p>
+            Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
+          </p>
+          
+          <p>
+            Proin facilisis velit arcu, nec dictum mauris sagittis fringilla. Suspendisse potenti.
+          </p>
+          
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+          
+          <p>
+            Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
+          </p>
+
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+          
+          
+
+          <h2>Autograph, compression factor 25, max keyframe interval = 2, size: <span class='size'></span></h2>
+          <scrub-video src="../videos/burlington-crf-25-g2.mp4" firefox-src="../videos/burlington-crf-25-g1.mp4"></scrub-video>
+          
+          <!-- <div class='scrub-video-wrapper'>
+            <div class='scrub-video-container'>
+            <video src='./videos/autograph-crf-25-g2.mp4' muted loop playsinline></video>
+            </div>
+          </div> -->
+
+
+
+          <p>
+            Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
+          </p>
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+          <h2>Autograph, compression factor 25, max keyframe interval = 2, size: <span class='size'></span></h2>
+          <scrub-video src="../videos/autograph-crf-25-g2.mp4"></scrub-video>
+          
+          <p>
+            Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
+          </p>
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+
+    </body>
+</html>

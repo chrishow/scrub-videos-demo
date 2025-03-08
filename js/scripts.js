@@ -51,6 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
 function ScrubVideoManager() {
     let that = this;
 
+    this.OVERSCRUB_AVOIDANCE_FACTOR = 0.99;
+
     // Get a list of all scrub videos
     this.scrubVideoWrappers = document.querySelectorAll('.scrub-video-wrapper');
     this.scrubVideoWrappersPositions = [];
@@ -133,7 +135,7 @@ ScrubVideoManager.prototype.handleScrollEvent = function (event) {
         const lower = activeWrapperPosition.lower;
         const upper = activeWrapperPosition.upper;
         const video = activeWrapperPosition.video;
-        const progress = Math.max(Math.min((window.scrollY - lower) / (upper - lower), 0.998), 0);
+        const progress = Math.max(Math.min((window.scrollY - lower) / (upper - lower), this.OVERSCRUB_AVOIDANCE_FACTOR), 0);
         const seekTime = (progress * video.duration);
 
         // console.log(`${lower} > ${window.scrollY} (${progress}) [${seekTime}]  > ${upper}`);
