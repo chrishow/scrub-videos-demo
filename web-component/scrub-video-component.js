@@ -9,12 +9,7 @@ class ScrubVideoComponent extends HTMLElement {
 
     constructor() {
         super();
-
-        this.src = null;
-
-        ScrubVideoComponent.createObserver();
-        document.addEventListener("scroll", (event) => { ScrubVideoComponent.handleScrollEvent(event); });
-        window.addEventListener("resize", () => { ScrubVideoComponent.updateWrapperPositions(); });
+        ScrubVideoComponent.maybeDoStaticInitialisation();
     }
 
     connectedCallback() {
@@ -38,6 +33,8 @@ class ScrubVideoComponent extends HTMLElement {
     }
 
     disconnectedCallback() {
+        document.removeEventListener("scroll", ScrubVideoComponent.handleScrollEvent); // Remove the event listener
+        window.removeEventListener("resize", () => { ScrubVideoComponent.updateWrapperPositions(); });
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -45,10 +42,11 @@ class ScrubVideoComponent extends HTMLElement {
     }
 
 
-    static createObserver() {
+    static maybeDoStaticInitialisation() {
         if (!ScrubVideoComponent.observer) {
             ScrubVideoComponent.observer = new IntersectionObserver(ScrubVideoComponent.intersectionObserverCallback, { threshold: 1 });
-            console.log('Created observer');
+            document.addEventListener("scroll", ScrubVideoComponent.handleScrollEvent);
+            window.addEventListener("resize", ScrubVideoComponent.updateWrapperPositions);
         }
     }
 
@@ -77,12 +75,13 @@ class ScrubVideoComponent extends HTMLElement {
         // Get new positions of video wrappers
         ScrubVideoComponent.scrubVideoWrappers.forEach((wrapper, index) => {
             const clientRect = wrapper.getBoundingClientRect();
-            const lower = clientRect.y + window.scrollY;
-            const upper = clientRect.bottom - window.innerHeight + window.scrollY;
+            const { y, bottom } = clientRect; // Destructure for readability
+            const wrapperTopPosition = y + window.scrollY;
+            const wrapperBottomPosition = bottom - window.innerHeight + window.scrollY;
 
             wrapper.componentData = {
-                lower: lower,
-                upper: upper,
+                lower: wrapperTopPosition,
+                upper: wrapperBottomPosition,
                 video: wrapper.getElementsByTagName('video')[0]
             };
         });
@@ -92,10 +91,11 @@ class ScrubVideoComponent extends HTMLElement {
     static handleScrollEvent(event) {
         if (ScrubVideoComponent.activeVideoWrapper) {
             const activeWrapperPosition = ScrubVideoComponent.activeVideoWrapper.componentData;
-            const lower = activeWrapperPosition.lower;
-            const upper = activeWrapperPosition.upper;
+            const wrapperTopPosition = activeWrapperPosition.lower;
+            const wrapperBottomPosition = activeWrapperPosition.upper;
             const video = activeWrapperPosition.video;
-            const progress = Math.max(Math.min((window.scrollY - lower) / (upper - lower), ScrubVideoComponent.OVERSCRUB_AVOIDANCE_FACTOR), 0);
+            // Calculate the scroll progress within the active video wrapper
+            const progress = Math.max(Math.min((window.scrollY - wrapperTopPosition) / (wrapperBottomPosition - wrapperTopPosition), ScrubVideoComponent.OVERSCRUB_AVOIDANCE_FACTOR), 0);
             const seekTime = (progress * video.duration);
 
             // console.log(`${lower} > ${window.scrollY} (${progress}) [${seekTime}]  > ${upper}`);
