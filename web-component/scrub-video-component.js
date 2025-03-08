@@ -28,6 +28,7 @@ class ScrubVideoComponent extends HTMLElement {
 
             // Update the positions of all scrub-videos
             ScrubVideoComponent.updateWrapperPositions();
+            ScrubVideoComponent.handleScrollEvent();
         });
 
     }
@@ -61,9 +62,8 @@ class ScrubVideoComponent extends HTMLElement {
 
             if (isWithinViewport) {
                 ScrubVideoComponent.activeVideoWrapper = entry.target.parentNode;
-                // console.log('ScrubVideoComponent.activeVideoWrapper', ScrubVideoComponent.activeVideoWrapper);
-            } else {
-                ScrubVideoComponent.activeVideoWrapper = null;
+                console.log('ScrubVideoComponent.activeVideoWrapper', ScrubVideoComponent.activeVideoWrapper);
+                ScrubVideoComponent.handleScrollEvent();
             }
         });
     }
@@ -98,9 +98,10 @@ class ScrubVideoComponent extends HTMLElement {
             const progress = Math.max(Math.min((window.scrollY - wrapperTopPosition) / (wrapperBottomPosition - wrapperTopPosition), ScrubVideoComponent.OVERSCRUB_AVOIDANCE_FACTOR), 0);
             const seekTime = (progress * video.duration);
 
-            // console.log(`${lower} > ${window.scrollY} (${progress}) [${seekTime}]  > ${upper}`);
-
-            video.currentTime = seekTime;
+            // console.log(`${wrapperTopPosition} > ${window.scrollY} (${progress}) [${seekTime}] duration: ${video.duration} > ${wrapperBottomPosition}`);
+            if (isFinite(seekTime)) {
+                video.currentTime = seekTime;
+            }
         }
     };
 
@@ -169,7 +170,7 @@ class ScrubVideoComponent extends HTMLElement {
                 top: var(--initial-margin-top, 3rem);
                 left: 0;
                 width: 100%;
-                height: calc(100% - var(--initial-margin-top) - var(--initial-margin-bottom, 3rem));
+                height: calc(100% - var(--initial-margin-top, 3rem) - var(--initial-margin-bottom, 3rem));
                 object-fit: cover;
                 opacity: 0;
                 transition: all var(--zoom-duration, 0.2s), opacity var(--load-fade-duration, 0.2s);
