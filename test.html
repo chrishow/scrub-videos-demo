@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="scrub-video-component.js"></script>
+
+        <style> 
+            /*
+             * scrub-video web component styles 
+             */
+             scrub-video {
+                /* Setting these help to avoid layout shifts */
+                display: block;
+                min-height: 100vh;
+
+
+                /* 
+                 * Settings from here the defaults, you don't actually need to 
+                 * set these unless you want to change the defaults
+                 */
+
+                /* Margins when the video is not zoomed 
+                 * You probably want these to match your site content's margins
+                 */
+                --unzoomed-margin-left: 5rem;
+                --unzoomed-margin-right: 5rem;
+                --unzoomed-margin-top: 3rem;
+                --unzoomed-margin-bottom: 3rem;
+
+                /* How many 'pages' you have to scroll through to
+                 * scrub through one video 
+                 */
+                --scrub-pages: 6;
+
+                /* How quickly the video fades in once loaded */
+                --load-fade-duration: 0.5s;
+
+                /* How quickly the video zooms as it goes full screen */
+                --zoom-duration: 0.2s;
+            }
+
+
+            /* The rest of these styles are just for this demo */
+            :root {
+                --side-margin: 5rem;
+            }
+
+            .small-screens {
+                display: none;
+            }
+
+            @media screen and (max-width: 650px) {
+                :root {
+                    --side-margin: 2rem;
+                }
+
+                .small-screens {
+                    display: block;
+                    padding: 1rem;
+                    background-color: aliceblue;
+                    margin: 2rem;
+                }
+            }
+
+
+            body {
+                font-family: Inter, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            }
+
+            body {
+                margin: 0;
+            }
+
+            h2,
+            p {
+                margin-left: var(--side-margin);
+                margin-right: var(--side-margin);
+            }
+
+            h2 {
+                margin-block: 1em 0;
+            }
+
+        </style>
+        
+    </head>
+    <body>
+        <h2>
+            All g1 videos test
+          </h2>
+          
+          <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </p>
+          
+          <p>
+            Proin facilisis velit arcu, nec dictum mauris sagittis fringilla. Suspendisse potenti.
+          </p>
+          
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+          
+          <p>
+            Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
+          </p>
+          
+          <p>
+            Proin facilisis velit arcu, nec dictum mauris sagittis fringilla. Suspendisse potenti.
+          </p>
+          
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+          
+          <p>
+            Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
+          </p>
+
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+          
+          
+
+          <h2>Burlington</h2>
+          <scrub-video src="./videos/burlington-crf-25-g1.mp4" min-width="650"></scrub-video>
+          
+          <div class="small-screens">
+            Do something else for narrow screens / phones...
+          </div>
+
+          <p>
+            Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
+          </p>
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+          <h2>Autograph</h2>
+          <scrub-video src="./videos/autograph-crf-25-g1.mp4" min-width="650"></scrub-video>
+          
+          <div class="small-screens">
+            Do something else for narrow screens / phones...
+          </div>
+
+          <p>
+            Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
+          </p>
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          
+          <p>
+            Aenean non nibh dictum, finibus urna accumsan, vulputate mauris.
+          </p>
+          
+          <p>
+            Fusce vehicula augue nec leo placerat vestibulum.
+          </p>
+          
+          <p>
+            Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
+          </p>
+
+    </body>
+</html>
