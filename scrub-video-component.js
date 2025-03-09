@@ -34,7 +34,7 @@ class ScrubVideoComponent extends HTMLElement {
         this.render();
         this.componentData = {};
 
-        this.zoomDuration = getComputedStyle(this).getPropertyValue('--zoom-duration') || 0.2;
+        this.zoomDuration = parseFloat(getComputedStyle(this).getPropertyValue('--zoom-duration') || '0.2s');
 
         // Get the video element
         this.video = this.shadowRoot.querySelector("video");
@@ -79,9 +79,10 @@ class ScrubVideoComponent extends HTMLElement {
             entry.target.classList.toggle('in-view', isWithinViewport);
 
             // Remove the animation class after we're done zooming in or out
+            const delay = entry.target.scrubVideoComponent.zoomDuration * 1000;
             setTimeout(() => {
                 entry.target.classList.remove('animating');
-            }, (entry.target.scrubVideoComponent.zoomDuration * 1000));
+            }, delay);
 
             if (isWithinViewport) {
                 ScrubVideoComponent.activeVideoComponent = entry.target.scrubVideoComponent;
