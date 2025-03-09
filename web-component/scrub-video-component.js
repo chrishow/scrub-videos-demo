@@ -34,6 +34,8 @@ class ScrubVideoComponent extends HTMLElement {
         this.render();
         this.componentData = {};
 
+        this.zoomDuration = getComputedStyle(this).getPropertyValue('--zoom-duration') || 0.2;
+
         // Get the video element
         this.video = this.shadowRoot.querySelector("video");
 
@@ -71,10 +73,15 @@ class ScrubVideoComponent extends HTMLElement {
 
     static intersectionObserverCallback(entries, observer) {
         entries.forEach(entry => {
-            const videoElement = entry.target.querySelector('video')[0];
             const isWithinViewport = entry.intersectionRatio === 1;
             // Add class 'in-view' to element if it is within the viewport
+            entry.target.classList.add('animating');
             entry.target.classList.toggle('in-view', isWithinViewport);
+
+            // Remove the animation class after we're done zooming in or out
+            setTimeout(() => {
+                entry.target.classList.remove('animating');
+            }, (entry.target.scrubVideoComponent.zoomDuration * 1000));
 
             if (isWithinViewport) {
                 ScrubVideoComponent.activeVideoComponent = entry.target.scrubVideoComponent;
@@ -164,9 +171,16 @@ class ScrubVideoComponent extends HTMLElement {
                 position: sticky;
                 top: 0px;
                 height: 100vh;
-                margin-left: var(--initial-margin-left, 5rem);
-                margin-right: var(--initial-margin-right, 5rem);
+                margin-left: var(--unzoomed-margin-left, 5rem);
+                margin-right: var(--unzoomed-margin-right, 5rem);                
+            }
+            
+            .scrub-video-container.animating {
                 transition: all var(--zoom-duration, 0.2s);
+            }
+
+            .scrub-video-container.animating video {
+                transition: all var(--zoom-duration, 0.2s), opacity var(--load-fade-duration, 0.2s);
             }
 
             .scrub-video-container.in-view {
@@ -180,13 +194,13 @@ class ScrubVideoComponent extends HTMLElement {
 
             video {
                 position: absolute;
-                top: var(--initial-margin-top, 3rem);
+                top: var(--unzoomed-margin-top, 3rem);
                 left: 0;
                 width: 100%;
-                height: calc(100% - var(--initial-margin-top, 3rem) - var(--initial-margin-bottom, 3rem));
+                height: calc(100% - var(--unzoomed-margin-top, 3rem) - var(--unzoomed-margin-bottom, 3rem));
                 object-fit: cover;
                 opacity: 0;
-                transition: all var(--zoom-duration, 0.2s), opacity var(--load-fade-duration, 0.2s);
+                transition: opacity var(--load-fade-duration, 0.2s);
             }
             
             video.loaded {

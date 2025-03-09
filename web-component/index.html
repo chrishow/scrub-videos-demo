@@ -20,10 +20,10 @@
                 /* Margins when the video is not zoomed 
                  * You probably want these to match your site content's margins
                  */
-                --initial-margin-left: 5rem;
-                --initial-margin-right: 5rem;
-                --initial-margin-top: 3rem;
-                --initial-margin-bottom: 3rem;
+                --unzoomed-margin-left: 5rem;
+                --unzoomed-margin-right: 5rem;
+                --unzoomed-margin-top: 3rem;
+                --unzoomed-margin-bottom: 3rem;
 
                 /* How many 'pages' you have to scroll through to
                  * scrub through one video 
@@ -34,7 +34,7 @@
                 --load-fade-duration: 0.2s;
 
                 /* How quickly the video zooms as it goes full screen */
-                --zoom-duration: 0.2s;
+                --X-zoom-duration: 0.2s;
             }
 
 
@@ -46,6 +46,11 @@
             @media screen and (max-width: 600px) {
                 :root {
                     --side-margin: 2rem;
+                }
+
+                scrub-video {
+                    --unzoomed-margin-left: 2rem;
+                    --unzoomed-margin-right: 2rem;
                 }
             }
 
