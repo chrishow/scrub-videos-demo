@@ -2,8 +2,8 @@
 
 class ScrubVideoComponent extends HTMLElement {
     static observer = null;
-    static activeVideoWrapper = null;
-    static scrubVideoWrappers = new Set();
+    static activeVideoComponent = null;
+    static scrubVideos = new Set();
     static observedElements = new Set();
     static OVERSCRUB_AVOIDANCE_FACTOR = 0.99;
 
@@ -15,6 +15,7 @@ class ScrubVideoComponent extends HTMLElement {
     connectedCallback() {
         this.attachShadow({ mode: "open" });
         this.render();
+        this.componentData = {};
 
         // Get the video element
         this.video = this.shadowRoot.querySelector("video");
@@ -22,18 +23,24 @@ class ScrubVideoComponent extends HTMLElement {
         // Preload the video
         this.preloadVideo().then(() => {
             // Setup this scrub-video
-            ScrubVideoComponent.observer.observe(this.shadowRoot.querySelector('.scrub-video-container'));
-            ScrubVideoComponent.scrubVideoWrappers.add(this.shadowRoot.querySelector('.scrub-video-wrapper'));
+            const videoContainer = this.shadowRoot.querySelector('.scrub-video-container');
+
+            // Add a reference to the scrub-video component to the video container,
+            // we'll need it later in the scroll event handler
+            videoContainer.scrubVideoComponent = this;
+
+            ScrubVideoComponent.observer.observe(videoContainer);
+            ScrubVideoComponent.scrubVideos.add(this);
 
             // Update the positions of all scrub-videos
-            ScrubVideoComponent.updateWrappers();
+            ScrubVideoComponent.updateScrubVideos();
         });
 
     }
 
     disconnectedCallback() {
         // If you were going to remove elements, you should update the
-        // ScrubVideoComponent.scrubVideoWrappers set
+        // ScrubVideoComponent.scrubVideos set
         // We're not going to do that here, that's left as an exercise
     }
 
@@ -46,7 +53,7 @@ class ScrubVideoComponent extends HTMLElement {
         if (!ScrubVideoComponent.observer) {
             ScrubVideoComponent.observer = new IntersectionObserver(ScrubVideoComponent.intersectionObserverCallback, { threshold: 1 });
             document.addEventListener("scroll", ScrubVideoComponent.handleScrollEvent);
-            window.addEventListener("resize", ScrubVideoComponent.updateWrappers);
+            window.addEventListener("resize", ScrubVideoComponent.updateScrubVideos);
         }
     }
 
@@ -60,33 +67,32 @@ class ScrubVideoComponent extends HTMLElement {
             entry.target.classList.toggle('in-view', isWithinViewport);
 
             if (isWithinViewport) {
-                ScrubVideoComponent.activeVideoWrapper = entry.target.parentNode;
-                // console.log('ScrubVideoComponent.activeVideoWrapper', ScrubVideoComponent.activeVideoWrapper);
+                ScrubVideoComponent.activeVideoComponent = entry.target.scrubVideoComponent;
                 ScrubVideoComponent.handleScrollEvent();
             }
         });
     }
 
-    static updateWrappers() {
-        // Get new positions of video wrappers
-        ScrubVideoComponent.scrubVideoWrappers.forEach((wrapper, index) => {
-            const clientRect = wrapper.getBoundingClientRect();
-            const { y, bottom } = clientRect; // Destructure for readability
-            const wrapperTopPosition = y + window.scrollY;
-            const wrapperBottomPosition = bottom - window.innerHeight + window.scrollY;
+    static updateScrubVideos() {
+        // Get new positions of scrub video components
+        ScrubVideoComponent.scrubVideos.forEach((videoComponent, index) => {
+            const clientRect = videoComponent.getBoundingClientRect();
+            const { y, bottom } = clientRect;
+            const videoComponentTopPosition = y + window.scrollY;
+            const videoComponentBottomPosition = bottom - window.innerHeight + window.scrollY;
 
-            wrapper.componentData = {
-                lower: wrapperTopPosition,
-                upper: wrapperBottomPosition,
-                video: wrapper.getElementsByTagName('video')[0]
+            videoComponent.componentData = {
+                lower: videoComponentTopPosition,
+                upper: videoComponentBottomPosition,
+                video: videoComponent.shadowRoot.querySelector('video')
             };
         });
 
     };
 
     static handleScrollEvent(event) {
-        if (ScrubVideoComponent.activeVideoWrapper) {
-            const activeWrapperPosition = ScrubVideoComponent.activeVideoWrapper.componentData;
+        if (ScrubVideoComponent.activeVideoComponent) {
+            const activeWrapperPosition = ScrubVideoComponent.activeVideoComponent.componentData;
             const { lower, upper, video } = activeWrapperPosition;
 
             // Calculate the scroll progress within the active video wrapper
@@ -133,9 +139,6 @@ class ScrubVideoComponent extends HTMLElement {
         <style>
             :host {
                 display: block;
-            }
-
-            .scrub-video-wrapper {
                 height: calc(100vh * var(--scrub-pages, 6));                
             }
 
@@ -173,10 +176,8 @@ class ScrubVideoComponent extends HTMLElement {
             }
 
         </style>
-        <div class='scrub-video-wrapper'>
-            <div class='scrub-video-container'>
-                <video src='${this.src}' muted  playsinline></video>
-            </div>
+        <div class='scrub-video-container'>
+            <video src='${this.src}' muted  playsinline></video>
         </div>`;
     }
 
