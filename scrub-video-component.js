@@ -19,10 +19,12 @@ class ScrubVideoComponent extends HTMLElement {
         this.minWidth = this.getAttribute('min-width') || 0;
         if (this.minWidth) {
             if (window.innerWidth >= this.minWidth) {
+                console.log(window.innerWidth);
+                console.log('minWidth', this.minWidth);
                 this.loadAndObserve();
             } else {
                 this.style.display = 'none';
-                this.isHidden = true
+                this.isHidden = true;
             }
         } else {
             this.loadAndObserve();
