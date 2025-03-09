@@ -43,14 +43,20 @@
                 --side-margin: 5rem;
             }
 
-            @media screen and (max-width: 600px) {
+            .small-screens {
+                display: none;
+            }
+
+            @media screen and (max-width: 650px) {
                 :root {
                     --side-margin: 2rem;
                 }
 
-                scrub-video {
-                    --unzoomed-margin-left: 2rem;
-                    --unzoomed-margin-right: 2rem;
+                .small-screens {
+                    display: block;
+                    padding: 1rem;
+                    background-color: aliceblue;
+                    margin: 2rem;
                 }
             }
 
@@ -140,8 +146,12 @@
           
 
           <h2>Autograph, compression factor 25, max keyframe interval = 5</h2>
-          <scrub-video src="./videos/burlington-crf-25-g5.mp4" firefox-src="../videos/burlington-crf-25-g1.mp4" min-width="800"></scrub-video>
+          <scrub-video src="./videos/burlington-crf-25-g5.mp4" firefox-src="../videos/burlington-crf-25-g1.mp4" min-width="650"></scrub-video>
           
+          <div class="small-screens">
+            Do something else for narrow screens / phones...
+          </div>
+
           <p>
             Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
           </p>
@@ -157,8 +167,12 @@
             Nam in quam arcu. Nam nunc mauris, tincidunt ac gravida quis, pellentesque luctus nunc. Nunc interdum sem sed sapien aliquam tempus.
           </p>
           <h2>Autograph, compression factor 25, max keyframe interval = 2</h2>
-          <scrub-video src="./videos/autograph-crf-25-g5.mp4" firefox-src="../videos/autograph-crf-25-g1.mp4"></scrub-video>
+          <scrub-video src="./videos/autograph-crf-25-g5.mp4" firefox-src="../videos/autograph-crf-25-g1.mp4" min-width="650"></scrub-video>
           
+          <div class="small-screens">
+            Do something else for narrow screens / phones...
+          </div>
+
           <p>
             Phasellus sit amet venenatis quam. Sed condimentum laoreet mauris. 
           </p>
