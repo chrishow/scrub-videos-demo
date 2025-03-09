@@ -7,6 +7,7 @@ class ScrubVideoComponent extends HTMLElement {
     static observedElements = new Set();
     static OVERSCRUB_AVOIDANCE_FACTOR = 0.99;
 
+
     constructor() {
         super();
         ScrubVideoComponent.maybeDoStaticInitialisation();
@@ -14,6 +15,22 @@ class ScrubVideoComponent extends HTMLElement {
 
     connectedCallback() {
         this.attachShadow({ mode: "open" });
+
+        this.minWidth = this.getAttribute('min-width') || 0;
+        if (this.minWidth) {
+            if (window.innerWidth >= this.minWidth) {
+                this.loadAndObserve();
+            } else {
+                this.style.display = 'none';
+                this.isHidden = true
+            }
+        } else {
+            this.loadAndObserve();
+        }
+        ScrubVideoComponent.scrubVideos.add(this);
+    }
+
+    loadAndObserve() {
         this.render();
         this.componentData = {};
 
@@ -25,12 +42,12 @@ class ScrubVideoComponent extends HTMLElement {
             // Setup this scrub-video
             const videoContainer = this.shadowRoot.querySelector('.scrub-video-container');
 
-            // Add a reference to the scrub-video component to the video container,
+            // Add a reference to this scrub-video component to the video container,
             // we'll need it later in the scroll event handler
             videoContainer.scrubVideoComponent = this;
 
             ScrubVideoComponent.observer.observe(videoContainer);
-            ScrubVideoComponent.scrubVideos.add(this);
+            ScrubVideoComponent.observedElements.add(this);
 
             // Update the positions of all scrub-videos
             ScrubVideoComponent.updateScrubVideos();
@@ -44,11 +61,6 @@ class ScrubVideoComponent extends HTMLElement {
         // We're not going to do that here, that's left as an exercise
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        // We're not supporting attribute changes in this component
-    }
-
-
     static maybeDoStaticInitialisation() {
         if (!ScrubVideoComponent.observer) {
             ScrubVideoComponent.observer = new IntersectionObserver(ScrubVideoComponent.intersectionObserverCallback, { threshold: 1 });
@@ -58,10 +70,8 @@ class ScrubVideoComponent extends HTMLElement {
     }
 
     static intersectionObserverCallback(entries, observer) {
-        // console.log('Intersection observer callback', entries, observer);
         entries.forEach(entry => {
             const videoElement = entry.target.querySelector('video')[0];
-
             const isWithinViewport = entry.intersectionRatio === 1;
             // Add class 'in-view' to element if it is within the viewport
             entry.target.classList.toggle('in-view', isWithinViewport);
@@ -80,6 +90,17 @@ class ScrubVideoComponent extends HTMLElement {
             const { y, bottom } = clientRect;
             const videoComponentTopPosition = y + window.scrollY;
             const videoComponentBottomPosition = bottom - window.innerHeight + window.scrollY;
+
+            if (videoComponent.minWidth && window.innerWidth < videoComponent.minWidth) {
+                videoComponent.style.display = 'none';
+                videoComponent.isHidden = true;
+            } else if (videoComponent.isHidden && window.innerWidth >= videoComponent.minWidth) {
+                videoComponent.style.display = 'block';
+                videoComponent.isHidden = false;
+                if (!ScrubVideoComponent.observedElements.has(videoComponent)) {
+                    videoComponent.loadAndObserve();
+                }
+            }
 
             videoComponent.componentData = {
                 lower: videoComponentTopPosition,
@@ -105,9 +126,6 @@ class ScrubVideoComponent extends HTMLElement {
             }
         }
     };
-
-
-
 
     preloadVideo() {
         return fetch(this.src)
