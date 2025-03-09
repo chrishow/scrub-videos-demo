@@ -143,7 +143,7 @@ class ScrubVideoComponent extends HTMLElement {
             .then((response) => {
                 let blobURL = URL.createObjectURL(response);
                 this.video.setAttribute("src", blobURL);
-                this.video.classList.add('loaded');
+                this.classList.add('video-loaded');
             });
     }
 
@@ -165,9 +165,16 @@ class ScrubVideoComponent extends HTMLElement {
         <style>
             :host {
                 display: block;
-                height: calc(100vh * var(--scrub-pages, 6));                
             }
 
+            :host(.video-loaded) {
+                height: calc(100vh * var(--scrub-pages, 6));
+            }
+
+            :host(.video-loaded) video {
+                opacity: 1;
+            }
+            
             .scrub-video-container {
                 position: sticky;
                 top: 0px;
@@ -204,10 +211,6 @@ class ScrubVideoComponent extends HTMLElement {
                 transition: opacity var(--load-fade-duration, 0.2s);
             }
             
-            video.loaded {
-                opacity: 1;
-            }
-
         </style>
         <div class='scrub-video-container'>
             <video src='${this.src}' muted  playsinline></video>
