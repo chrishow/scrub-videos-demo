@@ -31,7 +31,12 @@ keyframe interval of 5 are fine on Chrome, Edge and Safari, but are very janky o
 (larger) file encoded with a keyframe interval of 1 just for Firefox. 
 
 `min-width` allows you to specify a minimum window width in pixels, below which the element won't show, nor will it load the videos. 
-If the window width is later widened above the minimum, the videos will load and display automatically. 
+If the window width is later widened above the minimum, the videos will load and display automatically. You should make sure you have 
+your viewport correctly setup for this to work by adding this meta tag to the header:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
 
 
 #### 3. Add CSS
