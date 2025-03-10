@@ -84,4 +84,51 @@ How quickly the video zooms as it goes full screen
 ```
 
 
+## Encoding videos
+You can use [ffmpeg](https://www.ffmpeg.org/) to encode videos suitably for the web component. 
+
+If you don't have ffmpeg installed, you can use this in-browser version which doesn't require you to install 
+anything to your computer:
+
+https://ffmpeg.wide.video/
+
+I recommend using these settings for the Chrome/Edge/Safari version:
+
+```sh
+ffmpeg -y \
+-i input.mov \
+-vf scale=1920:-1 \
+-crf 25 \
+-g 5 \
+-movflags faststart \
+-vcodec libx264 \
+-pix_fmt yuv420p \
+-an \
+-preset 'slow' \
+output.mp4
+```
+In this example:
+
+`input.mov` is the input file (this can be .mov, .mp4, .mkv, .webm etc)  
+`-crf 25` is the compression setting, somewhere between 20 (small file, more compressed) and 30 (large file, very high quality) should work well.   
+`-g 5` the 'max keyframe interval'  
+`output.mp4` is your output file name.  
+
+For Firefox, I would change this to:
+```sh
+ffmpeg -y \
+-i input.mov \
+-vf scale=1920:-1 \
+-crf 25 \
+-g 1 \
+-movflags faststart \
+-vcodec libx264 \
+-pix_fmt yuv420p \
+-an \
+-preset 'slow' \
+firefox-output.mp4
+```
+
+
+
 
