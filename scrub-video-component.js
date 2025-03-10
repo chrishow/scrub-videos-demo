@@ -1,10 +1,10 @@
 "use strict";
 
 class ScrubVideoComponent extends HTMLElement {
-    static observer = null;
-    static activeVideoComponent = null;
-    static scrubVideos = new Set();
-    static observedElements = new Set();
+    static observer;
+    static activeVideoComponent;
+    static scrubVideos;
+    static observedElements;
     static OVERSCRUB_AVOIDANCE_FACTOR = 0.99;
 
 
@@ -19,8 +19,6 @@ class ScrubVideoComponent extends HTMLElement {
         this.minWidth = this.getAttribute('min-width') || 0;
         if (this.minWidth) {
             if (window.innerWidth >= this.minWidth) {
-                console.log(window.innerWidth);
-                console.log('minWidth', this.minWidth);
                 this.loadAndObserve();
             } else {
                 this.style.display = 'none';
@@ -70,6 +68,10 @@ class ScrubVideoComponent extends HTMLElement {
             ScrubVideoComponent.observer = new IntersectionObserver(ScrubVideoComponent.intersectionObserverCallback, { threshold: 1 });
             document.addEventListener("scroll", ScrubVideoComponent.handleScrollEvent);
             window.addEventListener("resize", ScrubVideoComponent.updateScrubVideos);
+
+            ScrubVideoComponent.scrubVideos = new Set();
+            ScrubVideoComponent.observedElements = new Set();
+
         }
     }
 
